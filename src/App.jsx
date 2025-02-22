@@ -270,7 +270,7 @@ export default function ImageFrameOverlay() {
         if (blob) {
           const url = URL.createObjectURL(blob);
           const link = document.createElement("a");
-          link.download = "framed_image.png";
+          link.download = `${formData.name || "frame_image"}.png`;
           link.href = url;
           document.body.appendChild(link);
           link.click();
