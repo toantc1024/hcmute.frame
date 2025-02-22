@@ -166,8 +166,16 @@ export default function ImageFrameOverlay() {
     ctx.restore();
   };
 
-  const drawText = (ctx, text, x, y, fillColor, centered = false) => {
-    const scale = canvasSize.width / frame.width;
+  const drawText = (
+    ctx,
+    text,
+    x,
+    y,
+    fillColor,
+    centered = false,
+    forcedScale = null
+  ) => {
+    const scale = forcedScale || canvasSize.width / frame.width;
     ctx.save();
 
     // Setup shadow and basic styles
@@ -180,15 +188,14 @@ export default function ImageFrameOverlay() {
     ctx.strokeStyle = "white";
     ctx.fillStyle = fillColor;
 
-    // Set text alignment based on parameter
     ctx.textAlign = centered ? "center" : "left";
     ctx.textBaseline = "middle";
 
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
+    const xPos = forcedScale ? x : x * scale;
+    const yPos = forcedScale ? y : y * scale;
 
-    ctx.strokeText(text, x * scale, y * scale);
-    ctx.fillText(text, x * scale, y * scale);
+    ctx.strokeText(text, xPos, yPos);
+    ctx.fillText(text, xPos, yPos);
 
     ctx.restore();
   };
@@ -199,22 +206,14 @@ export default function ImageFrameOverlay() {
 
     if (!frameLoaded || !canvas || !ctx) return;
 
-    // Set canvas size based on container but with higher resolution
-    const pixelRatio = window.devicePixelRatio || 1;
-    canvas.width = canvasSize.width * pixelRatio;
-    canvas.height = canvasSize.height * pixelRatio;
-    canvas.style.width = `${canvasSize.width}px`;
-    canvas.style.height = `${canvasSize.height}px`;
+    // Normal preview size
+    canvas.width = canvasSize.width;
+    canvas.height = canvasSize.height;
 
-    const scale = (canvasSize.width * pixelRatio) / frame.width;
+    const scale = canvasSize.width / frame.width;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Enable high-quality image rendering
-    ctx.imageSmoothingEnabled = true;
-    ctx.imageSmoothingQuality = "high";
-
-    // Draw the circular image first (if exists)
     if (uploadedImgLoaded) {
       const imageX = 332 * scale;
       const imageY = 570 * scale;
@@ -222,13 +221,11 @@ export default function ImageFrameOverlay() {
       drawCircularImage(ctx, uploadedImg, imageX, imageY, imageSize);
     }
 
-    // Draw frame on top
     ctx.save();
     ctx.scale(scale, scale);
     ctx.drawImage(frame, 0, 0);
     ctx.restore();
 
-    // Draw text with adjusted scale for high DPI
     drawText(ctx, `Đồng chí: ${formData.name}`, 667, 1350, "#0071bb", true);
     drawText(ctx, formData.position, 667, 1450, "#0071bb", true);
     drawText(ctx, formData.unit, 667, 1550, "#0071bb", true);
@@ -236,10 +233,47 @@ export default function ImageFrameOverlay() {
 
   const saveImage = () => {
     const canvas = canvasRef.current;
+    // Create a temporary high-resolution canvas for export
+    const exportCanvas = document.createElement("canvas");
+    const exportCtx = exportCanvas.getContext("2d", { alpha: true });
+
+    // Set high resolution dimensions (4x original size)
+    const scaleFactor = 4;
+    exportCanvas.width = frame.width;
+    exportCanvas.height = frame.height;
+
+    // Draw the circular image at high resolution
+    if (uploadedImgLoaded) {
+      const imageX = 332;
+      const imageY = 570;
+      const imageSize = 652;
+      drawCircularImage(exportCtx, uploadedImg, imageX, imageY, imageSize);
+    }
+
+    // Draw frame
+    exportCtx.drawImage(frame, 0, 0);
+
+    // Draw text at high resolution
+    exportCtx.imageSmoothingEnabled = true;
+    exportCtx.imageSmoothingQuality = "high";
+
+    // Draw text without scaling since we're using original frame dimensions
+    drawText(
+      exportCtx,
+      `Đồng chí: ${formData.name}`,
+      667,
+      1350,
+      "#0071bb",
+      true,
+      1
+    );
+    drawText(exportCtx, formData.position, 667, 1450, "#0071bb", true, 1);
+    drawText(exportCtx, formData.unit, 667, 1550, "#0071bb", true, 1);
+
+    // Export at maximum quality
     const link = document.createElement("a");
     link.download = "framed_image.png";
-    // Use maximum quality when saving
-    link.href = canvas.toDataURL("image/png", 1.0);
+    link.href = exportCanvas.toDataURL("image/png", 1.0);
     link.click();
   };
 
