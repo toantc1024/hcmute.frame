@@ -195,17 +195,24 @@ export default function ImageFrameOverlay() {
 
   const drawFrameWithImage = () => {
     const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d", { alpha: true });
 
     if (!frameLoaded || !canvas || !ctx) return;
 
-    // Set canvas size based on container
-    canvas.width = canvasSize.width;
-    canvas.height = canvasSize.height;
+    // Set canvas size based on container but with higher resolution
+    const pixelRatio = window.devicePixelRatio || 1;
+    canvas.width = canvasSize.width * pixelRatio;
+    canvas.height = canvasSize.height * pixelRatio;
+    canvas.style.width = `${canvasSize.width}px`;
+    canvas.style.height = `${canvasSize.height}px`;
 
-    const scale = canvasSize.width / frame.width;
+    const scale = (canvasSize.width * pixelRatio) / frame.width;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Enable high-quality image rendering
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
 
     // Draw the circular image first (if exists)
     if (uploadedImgLoaded) {
@@ -221,17 +228,18 @@ export default function ImageFrameOverlay() {
     ctx.drawImage(frame, 0, 0);
     ctx.restore();
 
-    // Center all text at x=667
-    drawText(ctx, `Đồng chí: ${formData.name}`, 667, 1350, "#0071bb", true); // Centered at 667
-    drawText(ctx, formData.position, 667, 1450, "#0071bb", true); // Centered at 667
-    drawText(ctx, formData.unit, 667, 1550, "#0071bb", true); // Centered at 667
+    // Draw text with adjusted scale for high DPI
+    drawText(ctx, `Đồng chí: ${formData.name}`, 667, 1350, "#0071bb", true);
+    drawText(ctx, formData.position, 667, 1450, "#0071bb", true);
+    drawText(ctx, formData.unit, 667, 1550, "#0071bb", true);
   };
 
   const saveImage = () => {
     const canvas = canvasRef.current;
     const link = document.createElement("a");
     link.download = "framed_image.png";
-    link.href = canvas.toDataURL("image/png");
+    // Use maximum quality when saving
+    link.href = canvas.toDataURL("image/png", 1.0);
     link.click();
   };
 
