@@ -1,5 +1,4 @@
-import LOGO from "../../assets/logo.png";
-import { FaTwitter, FaYoutube, FaInstagram } from "react-icons/fa";
+import LOGO from "../../assets/LOGO.png";
 import { ActionIcon, Container, Group, Text } from "@mantine/core";
 import classes from "./FooterLinks.module.css";
 
