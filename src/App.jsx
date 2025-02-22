@@ -8,7 +8,10 @@ import {
   Paper,
   Slider,
   Grid,
+  LoadingOverlay,
+  Group,
 } from "@mantine/core";
+import { FiUpload, FiDownload, FiCheck, FiX, FiImage } from "react-icons/fi";
 import Cropper from "react-easy-crop";
 import FRAME from "./assets/frame.png";
 import reactLogo from "./assets/react.svg";
@@ -231,57 +234,96 @@ export default function ImageFrameOverlay() {
     drawText(ctx, formData.unit, 667, 1550, "#0071bb", true);
   };
 
-  const saveImage = () => {
-    const canvas = canvasRef.current;
-    const exportCanvas = document.createElement("canvas");
-    const exportCtx = exportCanvas.getContext("2d", { alpha: true });
+  const [saving, setSaving] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    exportCanvas.width = frame.width;
-    exportCanvas.height = frame.height;
+  const saveImage = async () => {
+    try {
+      if (!uploadedImgLoaded) {
+        alert("Vui lòng tải ảnh lên trước khi lưu!");
+        return;
+      }
 
-    // Draw the circular image at high resolution
-    if (uploadedImgLoaded) {
-      const imageX = 332;
-      const imageY = 570;
-      const imageSize = 652;
-      drawCircularImage(exportCtx, uploadedImg, imageX, imageY, imageSize);
+      if (!formData.name.trim()) {
+        alert("Vui lòng nhập tên đồng chí!");
+        return;
+      }
+
+      setSaving(true);
+
+      const canvas = canvasRef.current;
+      const exportCanvas = document.createElement("canvas");
+      const exportCtx = exportCanvas.getContext("2d", { alpha: true });
+
+      if (!exportCtx) {
+        throw new Error("Không thể tạo context cho canvas");
+      }
+
+      exportCanvas.width = frame.width;
+      exportCanvas.height = frame.height;
+
+      // Draw the circular image at high resolution
+      if (uploadedImgLoaded) {
+        const imageX = 332;
+        const imageY = 570;
+        const imageSize = 652;
+        drawCircularImage(exportCtx, uploadedImg, imageX, imageY, imageSize);
+      }
+
+      // Draw frame and text
+      exportCtx.drawImage(frame, 0, 0);
+      exportCtx.imageSmoothingEnabled = true;
+      exportCtx.imageSmoothingQuality = "high";
+
+      drawText(
+        exportCtx,
+        `Đồng chí: ${formData.name}`,
+        667,
+        1350,
+        "#0071bb",
+        true,
+        1
+      );
+      drawText(exportCtx, formData.position, 667, 1450, "#0071bb", true, 1);
+      drawText(exportCtx, formData.unit, 667, 1550, "#0071bb", true, 1);
+
+      // Convert to Blob and create URL
+      await new Promise((resolve, reject) => {
+        exportCanvas.toBlob(
+          (blob) => {
+            if (blob) {
+              try {
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement("a");
+                link.download = `${formData.name || "frame_image"}.png`;
+                link.href = url;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                setTimeout(() => {
+                  URL.revokeObjectURL(url);
+                  setShowSuccessModal(true);
+                }, 100);
+                resolve();
+              } catch (error) {
+                reject(error);
+              }
+            } else {
+              reject(new Error("Không thể tạo file ảnh"));
+            }
+          },
+          "image/png",
+          1.0
+        );
+      });
+    } catch (error) {
+      console.error("Lỗi khi lưu ảnh:", error);
+      alert(
+        `Có lỗi xảy ra khi lưu ảnh: ${error.message || "Lỗi không xác định"}`
+      );
+    } finally {
+      setSaving(false);
     }
-
-    // Draw frame and text
-    exportCtx.drawImage(frame, 0, 0);
-    exportCtx.imageSmoothingEnabled = true;
-    exportCtx.imageSmoothingQuality = "high";
-
-    drawText(
-      exportCtx,
-      `Đồng chí: ${formData.name}`,
-      667,
-      1350,
-      "#0071bb",
-      true,
-      1
-    );
-    drawText(exportCtx, formData.position, 667, 1450, "#0071bb", true, 1);
-    drawText(exportCtx, formData.unit, 667, 1550, "#0071bb", true, 1);
-
-    // Convert to Blob and create URL
-    exportCanvas.toBlob(
-      (blob) => {
-        if (blob) {
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.download = `${formData.name || "frame_image"}.png`;
-          link.href = url;
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-          // Clean up the URL after download
-          setTimeout(() => URL.revokeObjectURL(url), 100);
-        }
-      },
-      "image/png",
-      1.0
-    );
   };
 
   return (
@@ -296,7 +338,13 @@ export default function ImageFrameOverlay() {
               style={{ display: "none" }}
               accept="image/*"
             />
-            <Button size="lg" radius="xl" onClick={triggerFileInput} fullWidth>
+            <Button
+              size="lg"
+              radius="xl"
+              onClick={triggerFileInput}
+              fullWidth
+              leftIcon={<FiImage size={20} />}
+            >
               Tải ảnh lên
             </Button>
             <TextInput
@@ -338,8 +386,10 @@ export default function ImageFrameOverlay() {
               onClick={saveImage}
               fullWidth
               color="blue"
+              loading={saving}
+              leftIcon={<FiDownload size={20} />}
             >
-              Tải Ảnh Xuống
+              {saving ? "Đang xử lý..." : "Tải Ảnh Xuống"}
             </Button>
           </Stack>
         </Grid.Col>
@@ -357,6 +407,8 @@ export default function ImageFrameOverlay() {
           </Paper>
         </Grid.Col>
       </Grid>
+
+      <LoadingOverlay visible={saving} overlayBlur={2} />
 
       <Modal
         opened={showCropModal}
@@ -389,6 +441,29 @@ export default function ImageFrameOverlay() {
         <Button onClick={getCroppedImage} fullWidth size="lg" radius="xl">
           Xác nhận
         </Button>
+      </Modal>
+
+      <Modal
+        opened={showSuccessModal}
+        onClose={() => setShowSuccessModal(false)}
+        title={
+          <Group>
+            <FiCheck size={20} color="green" />
+            Thành công
+          </Group>
+        }
+        size="sm"
+      >
+        <Stack spacing="md">
+          <div>Ảnh đã được tải xuống thành công!</div>
+          <Button
+            onClick={() => setShowSuccessModal(false)}
+            fullWidth
+            rightIcon={<FiX size={20} />}
+          >
+            Đóng
+          </Button>
+        </Stack>
       </Modal>
     </Container>
   );
