@@ -233,12 +233,9 @@ export default function ImageFrameOverlay() {
 
   const saveImage = () => {
     const canvas = canvasRef.current;
-    // Create a temporary high-resolution canvas for export
     const exportCanvas = document.createElement("canvas");
     const exportCtx = exportCanvas.getContext("2d", { alpha: true });
 
-    // Set high resolution dimensions (4x original size)
-    const scaleFactor = 4;
     exportCanvas.width = frame.width;
     exportCanvas.height = frame.height;
 
@@ -250,14 +247,11 @@ export default function ImageFrameOverlay() {
       drawCircularImage(exportCtx, uploadedImg, imageX, imageY, imageSize);
     }
 
-    // Draw frame
+    // Draw frame and text
     exportCtx.drawImage(frame, 0, 0);
-
-    // Draw text at high resolution
     exportCtx.imageSmoothingEnabled = true;
     exportCtx.imageSmoothingQuality = "high";
 
-    // Draw text without scaling since we're using original frame dimensions
     drawText(
       exportCtx,
       `Đồng chí: ${formData.name}`,
@@ -270,11 +264,24 @@ export default function ImageFrameOverlay() {
     drawText(exportCtx, formData.position, 667, 1450, "#0071bb", true, 1);
     drawText(exportCtx, formData.unit, 667, 1550, "#0071bb", true, 1);
 
-    // Export at maximum quality
-    const link = document.createElement("a");
-    link.download = "framed_image.png";
-    link.href = exportCanvas.toDataURL("image/png", 1.0);
-    link.click();
+    // Convert to Blob and create URL
+    exportCanvas.toBlob(
+      (blob) => {
+        if (blob) {
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.download = "framed_image.png";
+          link.href = url;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          // Clean up the URL after download
+          setTimeout(() => URL.revokeObjectURL(url), 100);
+        }
+      },
+      "image/png",
+      1.0
+    );
   };
 
   return (
