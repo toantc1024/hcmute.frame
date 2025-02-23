@@ -23,7 +23,10 @@ export default function FooterLinks() {
         className={classes.link}
         component="a"
         href={link.link}
-        onClick={(event) => event.preventDefault()}
+        onClick={(event) => {
+          event.preventDefault();
+          window.open(link.link, "_blank");
+        }}
       >
         {link.label}
       </Text>
