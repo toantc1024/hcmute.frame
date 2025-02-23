@@ -182,12 +182,12 @@ export default function ImageFrameOverlay() {
     ctx.save();
 
     // Setup shadow and basic styles
-    ctx.shadowOffsetX = 4 * scale;
-    ctx.shadowOffsetY = 5 * scale;
+    ctx.shadowOffsetX = 2 * scale;
+    ctx.shadowOffsetY = 1 * scale;
     ctx.shadowBlur = 8 * scale;
     ctx.shadowColor = "rgba(0, 0, 0, 0.12)";
     ctx.font = `bold ${Math.round(65 * scale)}px UTM-Swis`;
-    ctx.lineWidth = Math.round(7 * scale);
+    ctx.lineWidth = Math.round(8 * scale);
     ctx.strokeStyle = "white";
     ctx.fillStyle = fillColor;
 
@@ -217,6 +217,7 @@ export default function ImageFrameOverlay() {
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    // Draw circular image
     if (uploadedImgLoaded) {
       const imageX = 332 * scale;
       const imageY = 570 * scale;
@@ -224,24 +225,38 @@ export default function ImageFrameOverlay() {
       drawCircularImage(ctx, uploadedImg, imageX, imageY, imageSize);
     }
 
+    // Draw frame
     ctx.save();
     ctx.scale(scale, scale);
     ctx.drawImage(frame, 0, 0);
     ctx.restore();
-    drawText(ctx, `Đồng chí: ${formData.name}`, 667, 1350, "#0071bb", true); // Orange text on top
 
-    // Draw overlaid text at the same position
-    drawText(
-      ctx,
-      `                ${formData.name}`,
-      667,
-      1350,
-      "#f2774b",
-      true
-    ); // Blue text below
-    // Rest of the text
+    // Draw position and unit in orange
     drawText(ctx, formData.position, 667, 1450, "#0071bb", true);
     drawText(ctx, formData.unit, 667, 1550, "#0071bb", true);
+
+    // Draw name text with prefix
+    if (formData.name) {
+      // Calculate text measurements
+      ctx.save();
+      ctx.font = `bold ${Math.round(65 * scale)}px UTM-Swis`;
+      const prefix = "Đồng chí: ";
+      const totalWidth = ctx.measureText(prefix + formData.name).width;
+      const startX = 667 * scale - totalWidth / 2;
+      const prefixWidth = ctx.measureText(prefix).width;
+      ctx.restore();
+
+      // Draw texts
+      drawText(ctx, prefix, startX / scale, 1350, "#0071bb", false);
+      drawText(
+        ctx,
+        formData.name,
+        (startX + prefixWidth) / scale,
+        1350,
+        "#f2774b",
+        false
+      );
+    }
   };
 
   const [saving, setSaving] = useState(false);
@@ -280,22 +295,33 @@ export default function ImageFrameOverlay() {
         drawCircularImage(exportCtx, uploadedImg, imageX, imageY, imageSize);
       }
 
-      // Draw frame and text
+      // Draw frame and position/unit text
       exportCtx.drawImage(frame, 0, 0);
       exportCtx.imageSmoothingEnabled = true;
       exportCtx.imageSmoothingQuality = "high";
 
+      // Draw position and unit in orange
+      drawText(exportCtx, formData.position, 667, 1450, "#f2774b", true, 1);
+      drawText(exportCtx, formData.unit, 667, 1550, "#f2774b", true, 1);
+
+      // Calculate and draw centered text group for export
+      const prefix = "Đồng chí: ";
+      exportCtx.font = "bold 65px UTM-Swis";
+      const totalWidth = exportCtx.measureText(prefix + formData.name).width;
+      const startX = 667 - totalWidth / 2;
+      const prefixWidth = exportCtx.measureText(prefix).width;
+
+      // Draw prefix and name with different colors
+      drawText(exportCtx, prefix, startX, 1350, "#0071bb", false, 1);
       drawText(
         exportCtx,
-        `Đồng chí: ${formData.name}`,
-        667,
+        formData.name,
+        startX + prefixWidth,
         1350,
-        "#0071bb",
-        true,
+        "#f2774b",
+        false,
         1
       );
-      drawText(exportCtx, formData.position, 667, 1450, "#0071bb", true, 1);
-      drawText(exportCtx, formData.unit, 667, 1550, "#0071bb", true, 1);
 
       // Convert to Blob and create URL
       await new Promise((resolve, reject) => {
