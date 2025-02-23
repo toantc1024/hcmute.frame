@@ -301,8 +301,8 @@ export default function ImageFrameOverlay() {
       exportCtx.imageSmoothingQuality = "high";
 
       // Draw position and unit in orange
-      drawText(exportCtx, formData.position, 667, 1450, "#f2774b", true, 1);
-      drawText(exportCtx, formData.unit, 667, 1550, "#f2774b", true, 1);
+      drawText(exportCtx, formData.position, 667, 1450, "#0071bb", true, 1);
+      drawText(exportCtx, formData.unit, 667, 1550, "#0071bb", true, 1);
 
       // Calculate and draw centered text group for export
       const prefix = "Đồng chí: ";
