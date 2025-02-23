@@ -228,8 +228,18 @@ export default function ImageFrameOverlay() {
     ctx.scale(scale, scale);
     ctx.drawImage(frame, 0, 0);
     ctx.restore();
+    drawText(ctx, `Đồng chí: ${formData.name}`, 667, 1350, "#0071bb", true); // Orange text on top
 
-    drawText(ctx, `Đồng chí: ${formData.name}`, 667, 1350, "#0071bb", true);
+    // Draw overlaid text at the same position
+    drawText(
+      ctx,
+      `                ${formData.name}`,
+      667,
+      1350,
+      "#f2774b",
+      true
+    ); // Blue text below
+    // Rest of the text
     drawText(ctx, formData.position, 667, 1450, "#0071bb", true);
     drawText(ctx, formData.unit, 667, 1550, "#0071bb", true);
   };
