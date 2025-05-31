@@ -10,12 +10,16 @@ export default function ImageDownloader({
 }) {
     const [saving, setSaving] = useState(false);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
+    const [imageUrl, setImageUrl] = useState(null);
+    const [fileName, setFileName] = useState("image.png");
 
     const handleDownload = async () => {
         try {
             setSaving(true);
-            const success = await onDownload();
-            if (success) {
+            const result = await onDownload();
+            if (result && result.success) {
+                setImageUrl(result.url);
+                setFileName(result.fileName || "image.png");
                 setShowSuccessModal(true);
             }
         } catch (error) {
@@ -26,9 +30,7 @@ export default function ImageDownloader({
         } finally {
             setSaving(false);
         }
-    };
-
-    return (
+    };    return (
         <>            <Button
             size="lg"
             radius="xl"
@@ -45,6 +47,8 @@ export default function ImageDownloader({
             <SuccessModal
                 isOpen={showSuccessModal}
                 onClose={() => setShowSuccessModal(false)}
+                imageUrl={imageUrl}
+                fileName={fileName}
             />
         </>
     );

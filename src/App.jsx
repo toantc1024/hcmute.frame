@@ -134,16 +134,18 @@ export default function ImageFrameOverlay() {  // State management
         squareImageSettings
       );
     }
-  }, [renderer, avatarFrameLoaded, uploadedImg, uploadedImgLoaded, avatarCanvasSize, squareImageSettings]);  // Handle circular frame download
+  }, [renderer, avatarFrameLoaded, uploadedImg, uploadedImgLoaded, avatarCanvasSize, squareImageSettings]);  
+  
+  // Handle circular frame download  
   const handleCircularDownload = async () => {
     if (!uploadedImgLoaded) {
       alert("Vui lòng tải ảnh lên trước khi lưu!");
-      return false;
+      return { success: false };
     }
 
     if (!formData.name.trim()) {
       alert("Vui lòng nhập tên đồng chí!");
-      return false;
+      return { success: false };
     }
 
     try {
@@ -156,29 +158,35 @@ export default function ImageFrameOverlay() {  // State management
         );
 
         const url = URL.createObjectURL(blob);
+        const fileName = `${formData.name || "frame_image"}.png`;
+        
+        // Create and click link to download
         const link = document.createElement("a");
-        link.download = `${formData.name || "frame_image"}.png`;
+        link.download = fileName;
         link.href = url;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-        }, 100);
+        
+        // Don't revoke URL immediately so it can be used as fallback
+        // We'll keep the URL valid for the duration of the page session
+        // setTimeout(() => {
+        //   URL.revokeObjectURL(url);
+        // }, 100);
 
-        return true;
+        return { success: true, url, fileName };
       }
-      return false;
+      return { success: false };
     } catch (error) {
       console.error("Error downloading image:", error);
-      return false;
-    }
+      return { success: false };    }
   };
-  // Handle avatar frame download
+  
+  // Handle avatar frame download  
   const handleAvatarDownload = async () => {
     if (!uploadedImgLoaded) {
       alert("Vui lòng tải ảnh lên trước khi lưu!");
-      return false;
+      return { success: false };
     }
 
     try {
@@ -190,22 +198,28 @@ export default function ImageFrameOverlay() {  // State management
         );
 
         const url = URL.createObjectURL(blob);
+        const fileName = `${formData.name || "avatar_image"}.png`;
+        
+        // Create and click link to download
         const link = document.createElement("a");
-        link.download = `${formData.name || "avatar_image"}.png`;
+        link.download = fileName;
         link.href = url;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        setTimeout(() => {
-          URL.revokeObjectURL(url);
-        }, 100);
+        
+        // Don't revoke URL immediately so it can be used as fallback
+        // We'll keep the URL valid for the duration of the page session
+        // setTimeout(() => {
+        //   URL.revokeObjectURL(url);
+        // }, 100);
 
-        return true;
+        return { success: true, url, fileName };
       }
-      return false;
+      return { success: false };
     } catch (error) {
       console.error("Error downloading avatar image:", error);
-      return false;
+      return { success: false };
     }
   };  // Helper function to get the reason why the button is disabled
   const getDownloadDisabledReason = () => {

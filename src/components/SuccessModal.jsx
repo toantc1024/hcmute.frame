@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { Modal, Button, Group, Stack } from "@mantine/core";
-import { FiCheck, FiX } from "react-icons/fi";
+import { Modal, Button, Group, Stack, Text, Anchor } from "@mantine/core";
+import { FiCheck, FiX, FiDownload } from "react-icons/fi";
 
-export default function SuccessModal({ isOpen, onClose }) {
+export default function SuccessModal({ isOpen, onClose, imageUrl, fileName }) {
     return (
         <Modal
             opened={isOpen}
@@ -17,6 +17,27 @@ export default function SuccessModal({ isOpen, onClose }) {
         >
             <Stack spacing="md">
                 <div>Ảnh đã được tải xuống thành công!</div>
+                
+                {imageUrl && (
+                    <Text align="center" size="sm" color="dimmed" my="xs">
+                        <Anchor 
+                            href={imageUrl} 
+                            download={fileName}
+                            target="_blank"
+                            style={{ 
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                fontWeight: 500
+                            }}
+                        >
+                            <FiDownload size={16} />
+                            Nếu không tự động tải về, ấn vào đây
+                        </Anchor>
+                    </Text>
+                )}
+                
                 <Button
                     onClick={onClose}
                     fullWidth
