@@ -48,7 +48,7 @@ export default function FooterLinks() {
   });
 
   return (
-    <footer className={classes.footer}>
+    <footer className={classes.footer} >
       <Container className={classes.inner}>
         <div className={classes.logo}>
           <img src={LOGO} alt="Thành Đoàn Logo" className={classes.logoImage} />          <Text size="xl" className={classes.description}>
