@@ -229,78 +229,78 @@ export default function ImageFrameOverlay() {  // State management
       padding: '2rem 0',
       minHeight: '100vh'
     }}>
-    <Container size="xl" py="xl" className="pink-theme-container">
-      <Grid gutter="md">
-        <Grid.Col sm={12} md={4}>
-          <Stack spacing="lg">
-            <ImageUploader onImageLoaded={handleImageLoaded} />
-            <FormInputs formData={formData} setFormData={setFormData} /><SegmentedControl
-              value={activeFrame}
-              onChange={setActiveFrame}
-              data={[
-                { label: 'Khung ngang', value: 'circle' },
-                { label: 'Avatar', value: 'square' },
-              ]}
-              fullWidth
-              size="md"
-              mb="md"
-            />
-
-
-            <Tooltip
-              label={getDownloadDisabledReason()}
-              disabled={!getDownloadDisabledReason()}
-              position="bottom"
-              withArrow
-            >
-              <div style={{ width: '100%' }}>
-                {activeFrame === "circle" ? (
-                  <ImageDownloader
-                    onDownload={handleCircularDownload}
-                    disabled={!uploadedImgLoaded || formData.name.trim() === ""}
-                    buttonLabel="Tải Khung ngang"
-                  />
-                ) : (
-                  <ImageDownloader
-                    onDownload={handleAvatarDownload}
-                    disabled={!uploadedImgLoaded}
-                    buttonLabel="Tải avatar"
-                  />
-                )}
-              </div>
-            </Tooltip>
-          </Stack>
-        </Grid.Col>
-        <Grid.Col sm={12} md={8}>
-          <div>
-            {activeFrame === "circle" ? (
-              <CanvasPreview
-                drawFrame={drawCircularFrame}
-                frame={frame}
-                uploadedImg={uploadedImg}
-                uploadedImgLoaded={uploadedImgLoaded}
-                frameLoaded={frameLoaded}
-                formData={formData}
-                canvasSize={canvasSize}
-                title="Khung ngang"
+      <Container size="xl" py="xl" className="pink-theme-container">
+        <Grid gutter="md">
+          <Grid.Col sm={12} md={4}>
+            <Stack spacing="lg">
+              <ImageUploader onImageLoaded={handleImageLoaded} />
+              <FormInputs formData={formData} setFormData={setFormData} /><SegmentedControl
+                value={activeFrame}
+                onChange={setActiveFrame}
+                data={[
+                  { label: 'Khung ngang', value: 'circle' },
+                  { label: 'Avatar', value: 'square' },
+                ]}
+                fullWidth
+                size="md"
+                mb="md"
               />
-            ) : (
-              <CanvasPreview
-                drawFrame={drawAvatarFrame}
-                frame={avatarFrame}
-                uploadedImg={uploadedImg}
-                uploadedImgLoaded={uploadedImgLoaded}
-                frameLoaded={avatarFrameLoaded}
-                formData={formData}
-                canvasSize={avatarCanvasSize}
-                title="Ảnh Avatar"
-              />
-            )}
-          </div>
-        </Grid.Col>
-      </Grid>
 
-      <LoadingOverlay visible={saving} overlayBlur={2} />
-    </Container>
-  );
+
+              <Tooltip
+                label={getDownloadDisabledReason()}
+                disabled={!getDownloadDisabledReason()}
+                position="bottom"
+                withArrow
+              >
+                <div style={{ width: '100%' }}>
+                  {activeFrame === "circle" ? (
+                    <ImageDownloader
+                      onDownload={handleCircularDownload}
+                      disabled={!uploadedImgLoaded || formData.name.trim() === ""}
+                      buttonLabel="Tải Khung ngang"
+                    />
+                  ) : (
+                    <ImageDownloader
+                      onDownload={handleAvatarDownload}
+                      disabled={!uploadedImgLoaded}
+                      buttonLabel="Tải avatar"
+                    />
+                  )}
+                </div>
+              </Tooltip>
+            </Stack>
+          </Grid.Col>
+          <Grid.Col sm={12} md={8}>
+            <div>
+              {activeFrame === "circle" ? (
+                <CanvasPreview
+                  drawFrame={drawCircularFrame}
+                  frame={frame}
+                  uploadedImg={uploadedImg}
+                  uploadedImgLoaded={uploadedImgLoaded}
+                  frameLoaded={frameLoaded}
+                  formData={formData}
+                  canvasSize={canvasSize}
+                  title="Khung ngang"
+                />
+              ) : (
+                <CanvasPreview
+                  drawFrame={drawAvatarFrame}
+                  frame={avatarFrame}
+                  uploadedImg={uploadedImg}
+                  uploadedImgLoaded={uploadedImgLoaded}
+                  frameLoaded={avatarFrameLoaded}
+                  formData={formData}
+                  canvasSize={avatarCanvasSize}
+                  title="Ảnh Avatar"
+                />
+              )}
+            </div>
+          </Grid.Col>
+        </Grid>
+
+        <LoadingOverlay visible={saving} overlayBlur={2} />
+      </Container>
+      );
 }

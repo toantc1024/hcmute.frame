@@ -86,13 +86,15 @@ export default function ImageUploader({ onImageLoaded }) {
                 onChange={(e) => handleImageUpload(e.target.files[0])}
                 style={{ display: "none" }}
                 accept="image/*"
-            />
-            <Button
+            />            <Button
                 size="lg"
                 radius="xl"
                 onClick={triggerFileInput}
                 fullWidth
                 leftIcon={<FiImage size={20} />}
+                variant="gradient"
+                gradient={{ from: '#FF6699', to: '#FFA3C2', deg: 45 }}
+                sx={{ boxShadow: '0 4px 12px rgba(255, 71, 133, 0.25)' }}
             >
                 Tải ảnh lên
             </Button>
@@ -124,8 +126,14 @@ export default function ImageUploader({ onImageLoaded }) {
                     label="Thu phóng"
                     mb="md"
                     size="lg"
-                />
-                <Button onClick={getCroppedImage} fullWidth size="lg" radius="xl">
+                />                <Button
+                    onClick={getCroppedImage}
+                    fullWidth
+                    size="lg"
+                    radius="xl"
+                    variant="gradient"
+                    gradient={{ from: '#FF6699', to: '#FFA3C2', deg: 45 }}
+                >
                     Xác nhận
                 </Button>
             </Modal>
