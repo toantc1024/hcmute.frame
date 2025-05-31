@@ -51,15 +51,13 @@ export default class ImageFrameRenderer {
         ctx.restore();
     } drawText(ctx, text, x, y, fillColor, centered = false, forcedScale = null, scale) {
         const scaleToUse = forcedScale || scale;
-        ctx.save();
-
-        // Setup shadow and basic styles
+        ctx.save();        // Setup shadow and basic styles
         ctx.shadowOffsetX = 2 * scaleToUse;
         ctx.shadowOffsetY = 1 * scaleToUse;
         ctx.shadowBlur = 8 * scaleToUse;
-        ctx.shadowColor = "rgba(0, 0, 0, 0.12)";
-        ctx.font = `bold ${Math.round(165 * scaleToUse)}px UTM-Swis`; // Increased from 65 to 85
-        ctx.lineWidth = Math.round(15 * scaleToUse);
+        // ctx.shadowColor = "rgba(0, 0, 0, 0.12)";
+        ctx.font = `bold ${Math.round(195 * scaleToUse)}px UTM-Swis`; // Increased from 65 to 85
+        ctx.lineWidth = Math.round(4 * scaleToUse); // Reduced from 10 to 4 to eliminate sharp edges
         ctx.strokeStyle = "#ff69b4"; // Pink border
         ctx.fillStyle = "white";     // White fill
 
