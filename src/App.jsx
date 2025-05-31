@@ -223,14 +223,18 @@ export default function ImageFrameOverlay() {  // State management
 
     return null;
   };
-
   return (
-    <Container size="xl" py="xl">
+    <div className="pink-theme-background" style={{
+      background: 'linear-gradient(135deg, #FFF0F6 0%, #FFF5F9 100%)',
+      padding: '2rem 0',
+      minHeight: '100vh'
+    }}>
+    <Container size="xl" py="xl" className="pink-theme-container">
       <Grid gutter="md">
         <Grid.Col sm={12} md={4}>
           <Stack spacing="lg">
             <ImageUploader onImageLoaded={handleImageLoaded} />
-            <FormInputs formData={formData} setFormData={setFormData} />            <SegmentedControl
+            <FormInputs formData={formData} setFormData={setFormData} /><SegmentedControl
               value={activeFrame}
               onChange={setActiveFrame}
               data={[

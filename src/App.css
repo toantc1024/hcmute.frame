@@ -1,0 +1,62 @@
+/* Pink theme styles */
+:root {
+  --pink-light: #FFF0F6;
+  --pink-medium: #FF6699;
+  --pink-dark: #FF4785;
+  --pink-gradient: linear-gradient(45deg, #FF6699, #FFA3C2);
+}
+
+.mantine-Paper-root {
+  background-color: var(--pink-light);
+  border: 1px solid rgba(255, 102, 153, 0.2);
+}
+
+.mantine-Container-root {
+  background: #fff;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(255, 71, 133, 0.1);
+}
+
+.mantine-Title-root {
+  color: var(--pink-dark);
+}
+
+.mantine-Text-root {
+  color: #333;
+}
+
+.mantine-NumberInput-input:focus,
+.mantine-TextInput-input:focus,
+.mantine-Textarea-input:focus {
+  border-color: var(--pink-medium) !important;
+}
+
+.mantine-Slider-bar {
+  background-color: var(--pink-medium);
+}
+
+.mantine-Slider-thumb {
+  background-color: var(--pink-medium);
+  border-color: white;
+}
+
+.mantine-Divider-root {
+  border-top-color: rgba(255, 102, 153, 0.2);
+}
+
+/* Tooltip styles */
+.mantine-Tooltip-tooltip {
+  background-color: var(--pink-dark);
+}
+
+/* Custom canvas border */
+canvas {
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(255, 71, 133, 0.15);
+}
+
+/* Pink button hover effect */
+.mantine-Button-filled:hover {
+  background-color: var(--pink-dark) !important;
+  background-image: var(--pink-gradient);
+}
