@@ -302,5 +302,6 @@ export default function ImageFrameOverlay() {  // State management
 
         <LoadingOverlay visible={saving} overlayBlur={2} />
       </Container>
-      );
+    </div>
+  );
 }
