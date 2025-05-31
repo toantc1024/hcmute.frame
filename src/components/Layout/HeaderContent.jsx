@@ -1,6 +1,6 @@
 import { Avatar, Box, Group, Image } from "@mantine/core";
 import classes from "../../styles/HeaderContent.module.css";
-import LOGO from "../../assets/LOGO.png";
+import LOGO from "../../assets/LOGO.svg";
 
 export default function HeaderContent() {
   return (

@@ -1,4 +1,4 @@
-import LOGO from "../../assets/LOGO.png";
+import LOGO from "../../assets/LOGO.svg";
 import { ActionIcon, Container, Group, Text } from "@mantine/core";
 import classes from "./FooterLinks.module.css";
 
@@ -7,10 +7,17 @@ const data = [
     title: "Liên kết",
     links: [
       {
-        label: "Facebook",
-        link: "https://www.facebook.com/thanhdoanthanhphohochiminh",
+        label: "Website",
+        link: "https://hcmute.edu.vn",
       },
-      { label: "Email", link: "thanhdoan@tphcm.gov.vn" },
+      {
+        label: "Facebook Đoàn Thanh niên",
+        link: "mailto:Doantruong@hcmute.edu.vn",
+      },
+      {
+        label: "Facebook Hội Sinh viên",
+        link: "mailto:Dhspkt@hoisinhvien.vn",
+      },
     ],
   },
 ];
@@ -44,23 +51,23 @@ export default function FooterLinks() {
     <footer className={classes.footer}>
       <Container className={classes.inner}>
         <div className={classes.logo}>
-          <img src={LOGO} alt="Thành Đoàn Logo" className={classes.logoImage} />
-          <Text size="xl" className={classes.description}>
-            <strong>Thành Đoàn TP.HCM</strong>
-            <span>Số 1 Phạm Ngọc Thạch, Quận 1, TP HCM</span>
-            <span>Tel: (84.8) 38225124 - 38225146</span>
-            <span>Fax: (84.8) 38244705</span>
+          <img src={LOGO} alt="Thành Đoàn Logo" className={classes.logoImage} />          <Text size="xl" className={classes.description}>
+            <strong>Đoàn Thanh niên - Hội Sinh viên</strong>
+            <span>Trường ĐH Sư phạm Kỹ thuật TP. Hồ Chí Minh</span>
+            <span>Số 01, Võ Văn Ngân, phường Linh Chiểu, quận Thủ Đức</span>
             <span>
               Email:{" "}
-              <a href="mailto:thanhdoan@tphcm.gov.vn">thanhdoan@tphcm.gov.vn</a>
+              <a href="mailto:Doantruong@hcmute.edu.vn">Doantruong@hcmute.edu.vn</a> (Đoàn Thanh niên)
+            </span>
+            <span>
+              <a href="mailto:Dhspkt@hoisinhvien.vn">Dhspkt@hoisinhvien.vn</a> (Hội sinh viên)
             </span>
           </Text>
         </div>
         <div className={classes.groups}>{groups}</div>
-      </Container>
-      <Container className={classes.afterFooter}>
+      </Container>      <Container className={classes.afterFooter}>
         <Text c="dimmed" size="md">
-          © 2025 Thành Đoàn TP.HCM
+          © 2025 Đoàn Thanh niên - Hội Sinh viên Trường ĐH Sư phạm Kỹ thuật TP. Hồ Chí Minh
         </Text>
 
         <Group
