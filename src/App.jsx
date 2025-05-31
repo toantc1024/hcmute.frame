@@ -32,13 +32,11 @@ export default function ImageFrameOverlay() {  // State management
   const [uploadedImg, setUploadedImg] = useState(null);
   const [uploadedImgLoaded, setUploadedImgLoaded] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);
-  const [avatarFrameLoaded, setAvatarFrameLoaded] = useState(false);
-  const [formData, setFormData] = useState({
+  const [avatarFrameLoaded, setAvatarFrameLoaded] = useState(false);  const [formData, setFormData] = useState({
     name: "",
   });
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
   const [avatarCanvasSize, setAvatarCanvasSize] = useState({ width: 0, height: 0 });
-  const [saving, setSaving] = useState(false);
   const [renderer, setRenderer] = useState(null);
   const [activeFrame, setActiveFrame] = useState("circle"); // Default to circular frame
 
@@ -136,8 +134,7 @@ export default function ImageFrameOverlay() {  // State management
         squareImageSettings
       );
     }
-  }, [renderer, avatarFrameLoaded, uploadedImg, uploadedImgLoaded, avatarCanvasSize, squareImageSettings]);
-  // Handle circular frame download
+  }, [renderer, avatarFrameLoaded, uploadedImg, uploadedImgLoaded, avatarCanvasSize, squareImageSettings]);  // Handle circular frame download
   const handleCircularDownload = async () => {
     if (!uploadedImgLoaded) {
       alert("Vui lòng tải ảnh lên trước khi lưu!");
@@ -149,7 +146,6 @@ export default function ImageFrameOverlay() {  // State management
       return false;
     }
 
-    setSaving(true);
     try {
       if (renderer) {
         const blob = await renderer.createHighResolutionImage(
@@ -173,11 +169,11 @@ export default function ImageFrameOverlay() {  // State management
         return true;
       }
       return false;
-    } finally {
-      setSaving(false);
+    } catch (error) {
+      console.error("Error downloading image:", error);
+      return false;
     }
   };
-
   // Handle avatar frame download
   const handleAvatarDownload = async () => {
     if (!uploadedImgLoaded) {
@@ -185,7 +181,6 @@ export default function ImageFrameOverlay() {  // State management
       return false;
     }
 
-    setSaving(true);
     try {
       if (renderer) {
         const blob = await renderer.createHighResolutionAvatarImage(
@@ -208,8 +203,9 @@ export default function ImageFrameOverlay() {  // State management
         return true;
       }
       return false;
-    } finally {
-      setSaving(false);
+    } catch (error) {
+      console.error("Error downloading avatar image:", error);
+      return false;
     }
   };  // Helper function to get the reason why the button is disabled
   const getDownloadDisabledReason = () => {
@@ -300,7 +296,7 @@ export default function ImageFrameOverlay() {  // State management
           </Grid.Col>
         </Grid>
 
-        <LoadingOverlay visible={saving} overlayBlur={2} />
+        {/* Loading overlay removed as requested */}
       </Container>
     </div>
   );

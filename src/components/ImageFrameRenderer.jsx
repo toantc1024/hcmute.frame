@@ -173,24 +173,21 @@ export default class ImageFrameRenderer {
 
                 // Draw frame and position/unit text
                 exportCtx.drawImage(this.frame, 0, 0);
-                exportCtx.imageSmoothingEnabled = true;
-
-                // Calculate and draw centered text group for export
-                const prefix = "Đồng chí: ";
-                exportCtx.font = "bold 85px UTM-Swis"; // Increased from 65 to 85
-                const totalWidth = exportCtx.measureText(prefix + formData.name).width;
-                const startX = 667 - totalWidth / 2;
-                const prefixWidth = exportCtx.measureText(prefix).width;                // Draw prefix and name with pink border and white fill
-                this.drawText(exportCtx, prefix, startX, 1350, "#0071bb", false, 1);
-                this.drawText(
-                    exportCtx,
-                    formData.name,
-                    startX + prefixWidth,
-                    1350,
-                    "#f2774b",
-                    false,
-                    1
-                );
+                exportCtx.imageSmoothingEnabled = true;                // Draw name text centered just like in the preview
+                if (formData.name) {
+                    // Use the same position as in the preview (1883, 3770)
+                    const centerX = 1883;
+                    
+                    this.drawText(
+                        exportCtx,
+                        formData.name,
+                        centerX,
+                        3770,
+                        "#f2774b",
+                        true, // Set to true for centered text
+                        1
+                    );
+                }
 
                 // Convert to Blob and resolve
                 exportCanvas.toBlob(

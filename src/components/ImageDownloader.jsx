@@ -29,13 +29,12 @@ export default function ImageDownloader({
     };
 
     return (
-        <>
-            <Button
+        <>            <Button
                 size="lg"
                 radius="xl"
                 onClick={handleDownload}
                 fullWidth
-                color="blue"
+                color="pink"
                 loading={saving}
                 leftIcon={<FiDownload size={20} />}
                 disabled={disabled}
