@@ -32,7 +32,7 @@ export default function ImageFrameOverlay() {  // State management
   const [uploadedImg, setUploadedImg] = useState(null);
   const [uploadedImgLoaded, setUploadedImgLoaded] = useState(false);
   const [frameLoaded, setFrameLoaded] = useState(false);
-  const [avatarFrameLoaded, setAvatarFrameLoaded] = useState(false);  const [formData, setFormData] = useState({
+  const [avatarFrameLoaded, setAvatarFrameLoaded] = useState(false); const [formData, setFormData] = useState({
     name: "",
   });
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });

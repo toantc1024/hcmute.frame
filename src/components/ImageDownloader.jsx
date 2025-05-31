@@ -30,17 +30,17 @@ export default function ImageDownloader({
 
     return (
         <>            <Button
-                size="lg"
-                radius="xl"
-                onClick={handleDownload}
-                fullWidth
-                color="pink"
-                loading={saving}
-                leftIcon={<FiDownload size={20} />}
-                disabled={disabled}
-            >
-                {saving ? "Đang xử lý..." : buttonLabel}
-            </Button>
+            size="lg"
+            radius="xl"
+            onClick={handleDownload}
+            fullWidth
+            color="pink"
+            loading={saving}
+            leftIcon={<FiDownload size={20} />}
+            disabled={disabled}
+        >
+            {saving ? "Đang xử lý..." : buttonLabel}
+        </Button>
 
             <SuccessModal
                 isOpen={showSuccessModal}
