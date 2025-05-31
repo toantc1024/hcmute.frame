@@ -177,7 +177,7 @@ export default class ImageFrameRenderer {
                 if (formData.name) {
                     // Use the same position as in the preview (1883, 3770)
                     const centerX = 1883;
-                    
+
                     this.drawText(
                         exportCtx,
                         formData.name,
