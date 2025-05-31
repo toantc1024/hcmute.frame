@@ -49,23 +49,7 @@ export default function FooterLinks() {
 
   return (
     <footer className={classes.footer} >
-      <Container className={classes.inner}>
-        <div className={classes.logo}>
-          <img src={LOGO} alt="Thành Đoàn Logo" className={classes.logoImage} />          <Text size="xl" className={classes.description}>
-            <strong>Đoàn Thanh niên - Hội Sinh viên</strong>
-            <span>Trường ĐH Sư phạm Kỹ thuật TP. Hồ Chí Minh</span>
-            <span>Số 01, Võ Văn Ngân, phường Linh Chiểu, quận Thủ Đức</span>
-            <span>
-              Email:{" "}
-              <a href="mailto:Doantruong@hcmute.edu.vn">Doantruong@hcmute.edu.vn</a> (Đoàn Thanh niên)
-            </span>
-            <span>
-              <a href="mailto:Dhspkt@hoisinhvien.vn">Dhspkt@hoisinhvien.vn</a> (Hội sinh viên)
-            </span>
-          </Text>
-        </div>
-        <div className={classes.groups}>{groups}</div>
-      </Container>      <Container className={classes.afterFooter}>
+      <Container className={classes.afterFooter}>
         <Text c="dimmed" size="md">
           © 2025 Đoàn Thanh niên - Hội Sinh viên Trường ĐH Sư phạm Kỹ thuật TP. Hồ Chí Minh
         </Text>
